@@ -1,5 +1,9 @@
 # dsh-memguard — DSH 内存守卫
 
+> **拥有**：agent 启动进程的 RSS 采样与越界 kill（账本由 `tools/execute` 窗口差集建立）、`memguard_status` 工具与 `/dsh-memguard` 路由。
+> **冲突时**：与 `dsh-memory` 只差两个字母但领域无关（那个管提示词记忆）；本插件是 host 半边，不碰 UI。
+> **回滚**：删 `dsh-memguard` insert + 重启应用。
+
 AI 启动的脚本内存无限增长（泄漏/溢出风险）时：**直接杀掉进程树 + 自动给 agent 插一条警告提示词**，让模型修泄漏而不是原样重跑。
 
 ## 工作方式（host 半边，零 npm 依赖）
