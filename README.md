@@ -19,9 +19,22 @@ AI 启动的脚本内存无限增长（泄漏/溢出风险）时：**直接杀�
    - `tools/post-execute` 对该 agent 30s 内被杀事件附加 `additionalContexts`，解释命令为何非零退出。
 6. **可见性**：system-prompt 注入守卫说明（`notifySystemPrompt` 可关）；`memguard_status` 工具查状态/事件；`GET /dsh-memguard` JSON 状态路由；事件落盘 `~/.dsh/dsh-memguard/events.jsonl`（2MB 轮转）。
 
+## 设置面板（client 半边）
+
+「设置 → 插件 → 内存守卫」里是本插件的配置页（挂 `settings.plugins.tab`；该 slot 的 `id` 必须等于**插件包名**，宿主是按插件清单行的 id 用 `{ only: row.id }` 过滤渲染 tab 的，写成别的字符串会落在一个永不渲染的行上）：
+
+- 总开关 `enabled` 与提示词注入开关 `notifySystemPrompt`；
+- 一键预设：**大项目友好**（4G 阈值 / 60 秒增长窗口——Nuxt·Vite 这类冷启动就要吃 1~2G 的构建不再被误杀）与**恢复插件默认值**（默认值由 `GET /dsh-memguard` 的 `defaults` 下发，不在前端硬编码）；
+- 全部阈值字段（含 `growthSamples` 的 12 点硬上限说明）与 `excludeCommPatterns` 名单；
+- 实时状态：跟踪进程数、活跃进程组的 RSS、最近三次触发/终止事件。
+
+面板只走 host 已有的两条路由：`GET /dsh-memguard` 与 `POST /dsh-memguard/settings`，保存即时生效（host 侧 live re-read + `invalidateSettings()`），不必重启守卫。
+
+⚠️ 这个 POST 曾经是条哑路由：prefix 注册下 `req.url` 是**完整路径** `/dsh-memguard/settings`，而旧代码比对的是 `/settings` → 请求静默落进 GET 分支，写盘为 0（2026-09-27 实测）。现在两种形态都收；面板侧还会比对服务端回填值，不一致就直接报错，而不是假装保存成功。
+
 ## 配置
 
-`~/.dsh/dsh-memguard/settings.json`（live re-read，约 10s 生效；`POST /dsh-memguard/settings` 也可改）：
+`~/.dsh/dsh-memguard/settings.json`（live re-read，约 10s 生效）——**优先用设置面板改**，手写 JSON 或 `POST /dsh-memguard/settings` 也行：
 
 ```json
 {
@@ -52,6 +65,7 @@ AI 启动的脚本内存无限增长（泄漏/溢出风险）时：**直接杀�
    ```
 
 3. profile 里 `pnpm install`，然后**完全退出并重开 DSH Desktop**（host 半边新插件必须重启）。
+4. **动过 `package.json` 的 `dsh.client`（新增/移除 client 半边）同样要完全重启**：client 模块清单是宿主启动时读的。之后只改 `lib/client.js` 的**内容**则刷新页面即可——宿主每次生成 boot HTML 会重算每个模块的哈希（`plugins/??dsh-memguard/client.js&rev=…` 的 rev 会变）。
 
 ## 卸载/回滚
 

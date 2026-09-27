@@ -12,10 +12,18 @@
   "main": "./lib/index.js",
   "exports": {
     ".": "./lib/index.js",
+    "./client": "./lib/client.js",
     "./package.json": "./package.json"
+  },
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "immediately": true
+    }
   },
   "files": [
     "lib/index.js",
+    "lib/client.js",
     "README.md",
     "LICENSE"
   ],
