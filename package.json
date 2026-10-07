@@ -1,5 +1,6 @@
 {
   "name": "dsh-memguard",
+  "icon": "./assets/icon.svg",
   "version": "0.1.0",
   "description": "Memory guard for DSH: tracks every process your agent starts (ledger built from tools/execute window diffs), samples RSS at a fixed interval, kills the whole process tree when memory grows out of control (absolute threshold or sustained growth), and automatically steers/followups the owning agent with a warning prompt so it fixes the leak instead of rerunning the command. Includes a system-prompt notice, a memguard_status tool, a /dsh-memguard status route, and a JSONL event log. Host-half only, zero npm dependencies.",
   "license": "MIT",

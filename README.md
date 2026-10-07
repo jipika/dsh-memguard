@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="assets/icon.svg" width="72" alt="dsh-memguard icon">
+</div>
+
 # dsh-memguard — DSH 内存守卫
 
 > **拥有**：agent 启动进程的 RSS 采样与越界 kill（账本由 `tools/execute` 窗口差集建立）、`memguard_status` 工具与 `/dsh-memguard` 路由。
