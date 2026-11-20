@@ -20,13 +20,17 @@
     "client": {
       "platform": "web",
       "immediately": true
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
     }
   },
   "files": [
     "lib/index.js",
     "lib/client.js",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "cordis.patch.yml"
   ],
   "keywords": [
     "dsh",

@@ -1,0 +1,4 @@
+# dsh-memguard — bundle 层：只插入基础行，配置由 profile 的 cordis.patch.yml 覆盖。
+- insert:
+    - id: dsh-memguard
+      name: dsh-memguard
